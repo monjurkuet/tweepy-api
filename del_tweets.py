@@ -1,4 +1,6 @@
 import tweepy
+import threading
+import time
 
 from user_keys import keys
  
@@ -19,16 +21,20 @@ print "Getting all tweets..."
 # API is limited to 350 requests/hour per token
 # so for testing purposes we do 10 at a time
 
-timeline = api.user_timeline(count = 2500)
+timeline = api.user_timeline(count = 500)
 
 print "Found: %d" % (len(timeline))
 print "Removing..."
 print "Check https://volshebnik.xyz if you want to do it too :)"
 
 # Delete tweets one by one
-for t in timeline:
-    api.destroy_status(t.id)
+def del_tweets():
+    for t in timeline:
+        time.sleep(1)
+        api.destroy_status(t.id)
 
+threading.Thread(target=del_tweets).start()
+    
 print "Twitter timeline removed!"
     
     
